@@ -37,16 +37,15 @@ function whatDoYouWant(){
         var query = "SELECT item_id, product_name, stock_qantity "
         query += "FROM products "
         query += "WHERE item_id = " + itemID + " AND stock_qantity > " + amount +  ";" ;
-        console.log(query);
+        // console.log(query);
         connection.query(query, function(err, response, feilds){
-
-            if(err){
-                console.log("There is not enough to fullfill your order");
-            }else{
-            console.log(response);
+             if(amount <= response[0].stock_qantity){
+                 console.log("We have that in stock! Thank you for your purchase.");
+             }
+            console.log(response[0].stock_qantity);
+            console.log(response[0].product_name);
         
             console.log("#######################" + feilds + "##################");
-            }
     })
     });
 }
