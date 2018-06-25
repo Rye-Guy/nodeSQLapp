@@ -9,31 +9,45 @@ var connection = sql.createConnection({
     database: "bamazon_schema"
 });
 
-var userID; 
-
-
 connection.connect(function(err){
     if (err) throw err;
     whatDoYouWant();
 })
 
 function whatDoYouWant(){
-    inquirer.prompt({
+    inquirer.prompt([
+        {
 
         name: 'userID',
         type: 'input',
-        message: 'Please provide a product ID between (1 - 10)'
-    
-        
-    }).then(function(answer){
-        console.log(answer);
-        var query = "SELECT item_id, product_name, stock_quantity "
+        message: 'Please provide a product ID between (1 - 10)',
+       }, 
+       {
+        name: 'quantity',
+        type: 'input',
+        message: 'How many would you like?',
+       }
+    ]).then(function(answer){
+        var itemID = answer.userID
+        var amount = answer.quantity
+
+        console.log(itemID);
+        console.log(amount);
+
+        var query = "SELECT item_id, product_name, stock_qantity "
         query += "FROM products "
-        query += "WHERE item_id LIKE = " + parseFloat(answer.userID);
+        query += "WHERE item_id = " + itemID + " AND stock_qantity > " + amount +  ";" ;
         console.log(query);
-        connection.query(query, function(err, response){
+        connection.query(query, function(err, response, feilds){
+
+            if(err){
+                console.log("There is not enough to fullfill your order");
+            }else{
             console.log(response);
-        })
+        
+            console.log("#######################" + feilds + "##################");
+            }
+    })
     });
 }
 
