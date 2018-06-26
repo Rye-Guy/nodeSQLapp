@@ -33,20 +33,22 @@ function whatDoYouWant() {
         console.log(itemID);
         console.log(amount);
 
-        var query = "SELECT item_id, product_name, stock_qantity "
+        var query = "SELECT *"
         query += "FROM products "
         query += "WHERE item_id = " + itemID + " AND stock_qantity > " + amount + ";";
         // console.log(query);
         connection.query(query, function (err, response, feilds) {
+            console.log(response);
             if (err) throw err;
             if (amount <= response[0].stock_qantity) {
                 console.log("We have that in stock! Thank you for your purchase.");
                 var updateQuery = "UPDATE products SET stock_qantity = " + (response[0].stock_qantity - amount) + " WHERE item_id = " + itemID;
-                connection.query(updateQuery, function (err, response, feilds) {
+                connection.query(updateQuery, function (err, data, feilds) {
                     if (err) throw err;
-                    console.log("Your order was sucessful for" + answer.name + "your total is: $" + amount * answer);
+                    console.log(data);
+                    console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                 });
-            } else {
+            } else if(amount >= response[0].stock_qantity){
                 console.log("Sorry we are out of stock for that item...try less or wait for the manager to order more");
             }
             // console.log(response[0].stock_qantity);
@@ -59,6 +61,7 @@ function whatDoYouWant() {
 //     if(err){
 //         console.log("failed to connect")
 //     }else{
+
 //         console.log(response)
 //     }
 // })
