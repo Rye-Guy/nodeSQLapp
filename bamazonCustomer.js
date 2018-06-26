@@ -5,7 +5,7 @@ var connection = sql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "racioppo99",
+    password: "somepassword",
     database: "bamazon_schema"
 });
 
@@ -39,7 +39,7 @@ function whatDoYouWant() {
         // console.log(query);
         connection.query(query, function (err, response, feilds) {
             console.log(response);
-            if (err) throw err;
+            //if (err) throw err;
             if (amount <= response[0].stock_qantity) {
                 console.log("We have that in stock! Thank you for your purchase.");
                 var updateQuery = "UPDATE products SET stock_qantity = " + (response[0].stock_qantity - amount) + " WHERE item_id = " + itemID;
@@ -48,7 +48,7 @@ function whatDoYouWant() {
                     console.log(data);
                     console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                 });
-            } else if(amount >= response[0].stock_qantity){
+            } else{
                 console.log("Sorry we are out of stock for that item...try less or wait for the manager to order more");
             }
             // console.log(response[0].stock_qantity);
