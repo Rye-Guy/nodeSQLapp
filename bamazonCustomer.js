@@ -19,12 +19,12 @@ function whatDoYouWant() {
 
             name: 'userID',
             type: 'input',
-            message: 'Please provide a product ID between (1 - 10)',
+            message: 'Please provide a product ID between (1 - 10)'
         },
         {
             name: 'quantity',
             type: 'input',
-            message: 'How many would you like?',
+            message: 'How many would you like?'
         }
     ]).then(function (answer) {
         var itemID = answer.userID
@@ -49,13 +49,14 @@ function whatDoYouWant() {
                     console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                 });
             } else{
-                console.log("Sorry we are out of stock for that item...try less or wait for the manager to order more");
+                console.log("Insufficient quantity!");
             }
             // console.log(response[0].stock_quantity);
             // console.log(response[0].product_name);
         })
-    });
-}
+        connection.end();
+   });
+} 
 
 // connection.connect(function(err){
 //     if(err){
