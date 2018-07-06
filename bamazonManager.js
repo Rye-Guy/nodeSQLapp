@@ -39,59 +39,102 @@ function showMeTheStuff() {
         ]
 
     }).then(function (managerSelection) {
-        choice = JSON.stringify(managerSelection);
-        switch (choice) {
-            case '{"managerSelection":"option1"}':
-                console.log('Sweet');
-                var query = "SELECT * FROM products;";
-                connection.query(query, function (err, response, feilds) {
-                    if (err) throw err;
-                    for (i = 0; i < response.length; i++) {
-                        console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " #####");
-                    }
-                    inquirer.prompt({
-                        name: "nextStep",
-                        type: 'confirm',
-                        message: 'Would you like to do anything else?',
+            choice = JSON.stringify(managerSelection);
+            switch (choice) {
+                case '{"managerSelection":"option1"}':
+                    console.log('Sweet');
+                    var query = "SELECT * FROM products;";
+                    connection.query(query, function (err, response, feilds) {
+                        if (err) throw err;
+                        for (i = 0; i < response.length; i++) {
+                            console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " #####");
+                        }
+                        inquirer.prompt({
+                            name: "nextStep",
+                            type: 'confirm',
+                            message: 'Would you like to do anything else?',
 
-                    }).then(function (answer) {
-                        choice = JSON.stringify(answer);
-                        if (choice == '{"nextStep":false}') {
-                            console.log('Goodbye!...Connection Terminated');
-                            connection.end();
-                        } else
-                            showMeTheStuff();
+                        }).then(function (answer) {
+                            choice = JSON.stringify(answer);
+                            if (choice == '{"nextStep":false}') {
+                                console.log('Goodbye!...Connection Terminated');
+                                connection.end();
+                            } else
+                                showMeTheStuff();
+                        })
                     })
-                })
-                break;
+                    break;
 
-            case '{"managerSelection":"option2"}':
-                query = "SELECT item_id, product_name, stock_quantity FROM products WHERE stock_quantity <= 5"
-                connection.query(query, function(err, response){
-                    if(err) throw err; 
-                    console.log(response);
-                    for(i = 0; i < response.length; i++){
-                        console.log();
+                case '{"managerSelection":"option2"}':
+                    query = "SELECT item_id, product_name, stock_quantity FROM products WHERE stock_quantity <= 5"
+                    connection.query(query, function (err, response) {
+                        if (err) throw err;
+                        for (i = 0; i < response.length; i++) {
+                            console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " #####");
+                        }
+                        inquirer.prompt({
+                            name: "nextStep",
+                            type: 'choice',
+                            message: 'Would you like to place an order today?',
+
+                        }).then(function (answer) {
+                            choice = JSON.stringify(answer);
+                            if (choice == '{"nextStep":false}') {
+                                console.log('Goodbye!...Connection Terminated');
+                                connection.end();
+                            } else
+                                placeOrder();
+                            //showMeTheStuff();
+                        })
+                    });
+                    console.log('Sweet');
+                    break;
+
+                case '{"managerSelection":"option3"}':
+                    placeOrder();
+                    function placeOrder() {
+                        query = "SELECT item_id, product_name, stock_quantity FROM products"
+                        connection.query(query, function (err, response) {
+                                if (err) throw err;
+                                for (i = 0; i < response.length; i++) {
+                                    console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " #####");
+                                }
+                                inquirer.prompt([{
+
+                                    name: 'productID',
+                                    type: 'input',
+                                    message: 'Please provide a product ID for your order.'
+                                },
+                                {
+                                    name: 'quantity',
+                                    type: 'input',
+                                    message: 'How many would you like?'
+                                }
+                            ]).then(function (answer) {
+                                productID = answer.productID
+                                orderAmount = answer.quantity
+
+                                console.log(productID);
+                                console.log(orderAmount);
+                                
+                                
+
+                                });
+                            });
+                        }
+                        break;
+
+                        case '{"managerSelection":"option5"}':
+                            console.log('Sweet');
+                            break;
+
+                        default:
+                            console.log('Dude');
+                            break;
                     }
-                });
-                console.log('Sweet');
-                break;
+                    // if(choice == '{"managerSelection":"option1"}'){
 
-            case '{"managerSelection":"option3"}':
-                console.log('Sweet');
-                break;
-
-            case '{"managerSelection":"option5"}':
-                console.log('Sweet');
-                break;
-
-            default:
-                console.log('Dude');
-                break;
-        }
-        // if(choice == '{"managerSelection":"option1"}'){
-
-        // }else
-        // console.log("Dude");
-    })
-}
+                    // }else
+                    // console.log("Dude");
+            })
+    }
