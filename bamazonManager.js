@@ -74,7 +74,7 @@ function showMeTheStuff() {
                         }
                         inquirer.prompt({
                             name: "nextStep",
-                            type: 'choice',
+                            type: 'confirm',
                             message: 'Would you like to place an order today?',
 
                         }).then(function (answer) {
@@ -116,8 +116,25 @@ function showMeTheStuff() {
                                 console.log(productID);
                                 console.log(orderAmount);
                                 updateQuery = "UPDATE products SET stock_quantity = stock_quantity + " + orderAmount + " WHERE item_id = " + productID;
+                                connection.query(updateQuery, function (err, response){
+                                    if(err) throw err;
+                                    console.log("Order Completed!")
 
-                                console.log(updateQuery);
+                                    inquirer.prompt({
+                                        name: "nextStep",
+                                        type: 'confirm',
+                                        message: 'Would you like to place an order today?',
+            
+                                    }).then(function (answer) {
+                                        choice = JSON.stringify(answer);
+                                        if (choice == '{"nextStep":false}') {
+                                            console.log('Goodbye!...Connection Terminated');
+                                            connection.end();
+                                        } else
+                                            placeOrder();
+                                        //showMeTheStuff();
+                                    })
+                                });
                                 
 
                                 });

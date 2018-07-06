@@ -44,9 +44,10 @@ function whatDoYouWant() {
             if (amount <= response[0].stock_quantity) {
                 console.log("We have that in stock! Thank you for your purchase.");
                 var updateQuery = "UPDATE products SET stock_quantity = " + (response[0].stock_quantity - amount) + " WHERE item_id = " + itemID + ";";
-                connection.query(updateQuery, function (err, data, feilds) {
+                connection.query(updateQuery, function (err, response) {
                     // if (err) throw err;
                     console.log(updateQuery);
+                    console.log(response);
                     console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                     
                 });
