@@ -13,7 +13,7 @@ var connection = sql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     showMeTheStuff();
-});
+
 
 function showMeTheStuff() {
     inquirer.prompt({
@@ -101,7 +101,7 @@ function showMeTheStuff() {
                                 }
                                 inquirer.prompt([{
 
-                                    name: 'productID',
+                                    name: 'itemID',
                                     type: 'input',
                                     message: 'Please provide a product ID for your order.'
                                 },
@@ -111,12 +111,13 @@ function showMeTheStuff() {
                                     message: 'How many would you like?'
                                 }
                             ]).then(function (answer) {
-                                productID = answer.productID
+                                productID = answer.itemID
                                 orderAmount = answer.quantity
-
                                 console.log(productID);
                                 console.log(orderAmount);
-                                
+                                updateQuery = "UPDATE products SET stock_quantity = stock_quantity + " + orderAmount + " WHERE item_id = " + productID;
+
+                                console.log(updateQuery);
                                 
 
                                 });
@@ -138,3 +139,5 @@ function showMeTheStuff() {
                     // console.log("Dude");
             })
     }
+
+});
