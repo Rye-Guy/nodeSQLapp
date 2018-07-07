@@ -46,9 +46,11 @@ function showMeTheStuff() {
                     var query = "SELECT * FROM products;";
                     connection.query(query, function (err, response, feilds) {
                         if (err) throw err;
+                        console.log("---------Inventory---------");
                         for (i = 0; i < response.length; i++) {
-                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " | #####");
+                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " | ####");
                         }
+                        console.log("---------Inventory---------");
                         inquirer.prompt({
                             name: "nextStep",
                             type: 'confirm',
@@ -69,9 +71,11 @@ function showMeTheStuff() {
                     query = "SELECT item_id, product_name, stock_quantity FROM products WHERE stock_quantity <= 5"
                     connection.query(query, function (err, response) {
                         if (err) throw err;
+                        console.log("---------LOW Inventory---------");
                         for (i = 0; i < response.length; i++) {
-                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " | #####");
+                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " | ####");
                         }
+                        console.log("---------LOW Inventory---------");
                         inquirer.prompt({
                             name: "nextStep",
                             type: 'confirm',
@@ -95,9 +99,11 @@ function showMeTheStuff() {
                         query = "SELECT item_id, product_name, stock_quantity FROM products"
                         connection.query(query, function (err, response) {
                                 if (err) throw err;
+                                console.log("---------Inventory---------");
                                 for (i = 0; i < response.length; i++) {
-                                    console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | Stock: " + response[i].stock_quantity + " | #####");
+                                    console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | Stock: " + response[i].stock_quantity + " | ####");
                                 }
+                                console.log("---------Inventory---------");
                                 inquirer.prompt([{
 
                                     name: 'itemID',
@@ -176,16 +182,28 @@ function showMeTheStuff() {
                         ]).then(function (answers) {
                           
                             updateQuery = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (" + "'" + answers.productName + "'" + ", " +  "'" + answers.department + "'" + ", " + answers.productPrice  + ", " + answers.stockNum + ");";
-
-                            console.log(updateQuery);
-                            
                             connection.query(updateQuery, function(err, response){
                                // if(err) throw err;
                                 console.log("You have made an order successfully");
+                                
 
+                                inquirer.prompt({
+                                    name: "nextStep",
+                                    type: 'confirm',
+                                    message: 'Would you like to add another product?',
+        
+                                }).then(function (answer) {
+                                    choice = JSON.stringify(answer);
+                                    if (choice == '{"nextStep":false}') {
+                                        console.log('Goodbye!...Connection Terminated');
+                                        connection.end();
+                                    } else
+                                        newProduct();
+                                })
+                            
                             })
                             // INSERT INTO products (product_name, department_name, price, stock_quantity)
-                            // VALUES (var1, var2, numVar1, numVar2)
+                            // VALUES (varn1, var2, numVar1, numVar2)
                         });
                             
                         
