@@ -42,12 +42,12 @@ function showMeTheStuff() {
             choice = JSON.stringify(managerSelection);
             switch (choice) {
                 case '{"managerSelection":"option1"}':
-                    console.log('Sweet');
+        
                     var query = "SELECT * FROM products;";
                     connection.query(query, function (err, response, feilds) {
                         if (err) throw err;
                         for (i = 0; i < response.length; i++) {
-                            console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " #####");
+                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " | #####");
                         }
                         inquirer.prompt({
                             name: "nextStep",
@@ -70,7 +70,7 @@ function showMeTheStuff() {
                     connection.query(query, function (err, response) {
                         if (err) throw err;
                         for (i = 0; i < response.length; i++) {
-                            console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " #####");
+                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " | #####");
                         }
                         inquirer.prompt({
                             name: "nextStep",
@@ -87,7 +87,6 @@ function showMeTheStuff() {
                             //showMeTheStuff();
                         })
                     });
-                    console.log('Sweet');
                     break;
 
                 case '{"managerSelection":"option3"}':
@@ -97,7 +96,7 @@ function showMeTheStuff() {
                         connection.query(query, function (err, response) {
                                 if (err) throw err;
                                 for (i = 0; i < response.length; i++) {
-                                    console.log("#### " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " Stock: " + response[i].stock_quantity + " #####");
+                                    console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | Stock: " + response[i].stock_quantity + " | #####");
                                 }
                                 inquirer.prompt([{
 
@@ -113,8 +112,6 @@ function showMeTheStuff() {
                             ]).then(function (answer) {
                                 productID = answer.itemID
                                 orderAmount = answer.quantity
-                                console.log(productID);
-                                console.log(orderAmount);
                                 updateQuery = "UPDATE products SET stock_quantity = stock_quantity + " + orderAmount + " WHERE item_id = " + productID;
                                 connection.query(updateQuery, function (err, response){
                                     if(err) throw err;
@@ -141,14 +138,60 @@ function showMeTheStuff() {
                             });
                         }
                         break;
+           
+                        case '{"managerSelection":"option4"}':
+                        newProduct();
 
-                        case '{"managerSelection":"option5"}':
-                            console.log('Sweet');
-                            break;
+                         function newProduct(){
+                            inquirer.prompt([{
 
-                        default:
-                            console.log('Dude');
-                            break;
+                                name: 'productName',
+                                type: 'input',
+                                message: 'Please Provide a Product Name'
+                            },
+                            {
+                                name: 'department',
+                                type: 'list',
+                                message: 'What Department Does It Belong In?',
+                                choices: [{
+                                    value: 'Mystical Items',
+                                    name: "Mystical Items"
+                                },
+                                {
+                                    value: 'Mythological Items',
+                                    name: "Mythological Items"
+                                }
+                            ]
+                            },
+                            {
+                                name: 'productPrice',
+                                type: 'input',
+                                message: 'The Price of The Item?'
+                            },
+                            {
+                                name: 'stockNum',
+                                type: 'input',
+                                message: 'How much are you stocking?'
+                            }
+                        ]).then(function (answers) {
+                          
+                            updateQuery = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (" + "'" + answers.productName + "'" + ", " +  "'" + answers.department + "'" + ", " + answers.productPrice  + ", " + answers.stockNum + ");";
+
+                            console.log(updateQuery);
+                            
+                            connection.query(updateQuery, function(err, response){
+                               // if(err) throw err;
+                                console.log("You have made an order successfully");
+
+                            })
+                            // INSERT INTO products (product_name, department_name, price, stock_quantity)
+                            // VALUES (var1, var2, numVar1, numVar2)
+                        });
+                            
+                        
+                    }
+                    break;
+
                     }
                     // if(choice == '{"managerSelection":"option1"}'){
 

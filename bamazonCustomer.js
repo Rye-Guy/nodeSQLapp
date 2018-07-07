@@ -48,7 +48,7 @@ function whatDoYouWant() {
                     // if (err) throw err;
                     console.log(updateQuery);
                     console.log(response);
-                    console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
+                    console.log("Your order was successful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                     
                 });
             } else{
