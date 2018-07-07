@@ -12,14 +12,23 @@ var connection = sql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     whatDoYouWant();
-
+})
 
 function whatDoYouWant() {
+    query = "SELECT * FROM products;"
+    connection.query(query, function(err, response){
+        if (err) throw err;
+                        console.log("---------Inventory---------");
+                        for (i = 0; i < response.length; i++) {
+                            console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | " + " Price: $" + response[i].price + " | " + " Stock: " + response[i].stock_quantity + " | ####");
+                        }
+                        console.log("---------Inventory---------");
+    })
     inquirer.prompt([{
 
             name: 'userID',
             type: 'input',
-            message: 'Please provide a product ID between (1 - 10)'
+            message: 'Please provide a valid item id.'
         },
         {
             name: 'quantity',
@@ -30,25 +39,20 @@ function whatDoYouWant() {
         var itemID = answer.userID
         var amount = answer.quantity
 
-        console.log(itemID);
-        console.log(amount);
-
-        var query = "SELECT *"
-        query += "FROM products "
+        var query = "SELECT * FROM products "
         query += "WHERE item_id = " + itemID + " AND stock_quantity > " + amount + ";";
 
         // console.log(query);
         connection.query(query, function (err, response, feilds) {
-            console.log(response);
+            
             //if (err) throw err;
             if (amount <= response[0].stock_quantity) {
                 console.log("We have that in stock! Thank you for your purchase.");
-                var updateQuery = "UPDATE products SET stock_quantity = " + (response[0].stock_quantity - amount) + " WHERE item_id = " + itemID + ";";
-                connection.query(updateQuery, function (err, response) {
+                var updateQuery = "UPDATE products SET stock_quantity = " + (response[0].stock_quantity - amount) + " WHERE item_id = " + itemID;
+                connection.query(updateQuery, function (err, data, feilds) {
                     // if (err) throw err;
-                    console.log(updateQuery);
-                    console.log(response);
-                    console.log("Your order was successful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
+            
+                    console.log("Your order was sucessful for " + response[0].product_name + " your total is: $" + amount * response[0].price);
                     
                 });
             } else{
@@ -61,7 +65,6 @@ function whatDoYouWant() {
    });
 } 
 
-});
 // connection.connect(function(err){
 //     if(err){
 //         console.log("failed to connect")
