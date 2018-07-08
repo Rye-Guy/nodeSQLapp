@@ -15,34 +15,34 @@ connection.connect(function (err) {
     showMeTheStuff();
 
 
-function showMeTheStuff() {
-    inquirer.prompt({
-        name: 'managerSelection',
-        type: 'list',
-        message: 'Hola, Jefe. What would you like?',
-        choices: [{
-                value: 'option1',
-                name: "View Products For Sale"
-            },
-            {
-                value: 'option2',
-                name: "View Low Inventory"
-            },
-            {
-                value: 'option3',
-                name: "Add to Inventory"
-            },
-            {
-                value: 'option4',
-                name: "Add New Product"
-            }
-        ]
+    function showMeTheStuff() {
+        inquirer.prompt({
+            name: 'managerSelection',
+            type: 'list',
+            message: 'Hola, Jefe. What would you like?',
+            choices: [{
+                    value: 'option1',
+                    name: "View Products For Sale"
+                },
+                {
+                    value: 'option2',
+                    name: "View Low Inventory"
+                },
+                {
+                    value: 'option3',
+                    name: "Add to Inventory"
+                },
+                {
+                    value: 'option4',
+                    name: "Add New Product"
+                }
+            ]
 
-    }).then(function (managerSelection) {
+        }).then(function (managerSelection) {
             choice = JSON.stringify(managerSelection);
             switch (choice) {
                 case '{"managerSelection":"option1"}':
-        
+
                     var query = "SELECT * FROM products;";
                     connection.query(query, function (err, response, feilds) {
                         if (err) throw err;
@@ -95,16 +95,17 @@ function showMeTheStuff() {
 
                 case '{"managerSelection":"option3"}':
                     placeOrder();
+
                     function placeOrder() {
                         query = "SELECT item_id, product_name, stock_quantity FROM products"
                         connection.query(query, function (err, response) {
-                                if (err) throw err;
-                                console.log("---------Inventory---------");
-                                for (i = 0; i < response.length; i++) {
-                                    console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | Stock: " + response[i].stock_quantity + " | ####");
-                                }
-                                console.log("---------Inventory---------");
-                                inquirer.prompt([{
+                            if (err) throw err;
+                            console.log("---------Inventory---------");
+                            for (i = 0; i < response.length; i++) {
+                                console.log("#### | " + "Item ID: " + response[i].item_id + " | " + "Name: " + response[i].product_name + " | Stock: " + response[i].stock_quantity + " | ####");
+                            }
+                            console.log("---------Inventory---------");
+                            inquirer.prompt([{
 
                                     name: 'itemID',
                                     type: 'input',
@@ -119,15 +120,15 @@ function showMeTheStuff() {
                                 productID = answer.itemID
                                 orderAmount = answer.quantity
                                 updateQuery = "UPDATE products SET stock_quantity = stock_quantity + " + orderAmount + " WHERE item_id = " + productID;
-                                connection.query(updateQuery, function (err, response){
-                                    if(err) throw err;
+                                connection.query(updateQuery, function (err, response) {
+                                    if (err) throw err;
                                     console.log("Order Completed!")
 
                                     inquirer.prompt({
                                         name: "nextStep",
                                         type: 'confirm',
                                         message: 'Would you like to place an order today?',
-            
+
                                     }).then(function (answer) {
                                         choice = JSON.stringify(answer);
                                         if (choice == '{"nextStep":false}') {
@@ -138,18 +139,18 @@ function showMeTheStuff() {
                                         //showMeTheStuff();
                                     })
                                 });
-                                
 
-                                });
+
                             });
-                        }
-                        break;
-           
-                        case '{"managerSelection":"option4"}':
-                        newProduct();
+                        });
+                    }
+                    break;
 
-                         function newProduct(){
-                            inquirer.prompt([{
+                case '{"managerSelection":"option4"}':
+                    newProduct();
+
+                    function newProduct() {
+                        inquirer.prompt([{
 
                                 name: 'productName',
                                 type: 'input',
@@ -160,14 +161,14 @@ function showMeTheStuff() {
                                 type: 'list',
                                 message: 'What Department Does It Belong In?',
                                 choices: [{
-                                    value: 'Mystical Items',
-                                    name: "Mystical Items"
-                                },
-                                {
-                                    value: 'Mythological Items',
-                                    name: "Mythological Items"
-                                }
-                            ]
+                                        value: 'Mystical Items',
+                                        name: "Mystical Items"
+                                    },
+                                    {
+                                        value: 'Mythological Items',
+                                        name: "Mythological Items"
+                                    }
+                                ]
                             },
                             {
                                 name: 'productPrice',
@@ -180,18 +181,18 @@ function showMeTheStuff() {
                                 message: 'How much are you stocking?'
                             }
                         ]).then(function (answers) {
-                          
-                            updateQuery = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (" + "'" + answers.productName + "'" + ", " +  "'" + answers.department + "'" + ", " + answers.productPrice  + ", " + answers.stockNum + ");";
-                            connection.query(updateQuery, function(err, response){
-                               // if(err) throw err;
+
+                            updateQuery = "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES (" + "'" + answers.productName + "'" + ", " + "'" + answers.department + "'" + ", " + answers.productPrice + ", " + answers.stockNum + ");";
+                            connection.query(updateQuery, function (err, response) {
+                                // if(err) throw err;
                                 console.log("You have made an order successfully");
-                                
+
 
                                 inquirer.prompt({
                                     name: "nextStep",
                                     type: 'confirm',
                                     message: 'Would you like to add another product?',
-        
+
                                 }).then(function (answer) {
                                     choice = JSON.stringify(answer);
                                     if (choice == '{"nextStep":false}') {
@@ -200,22 +201,22 @@ function showMeTheStuff() {
                                     } else
                                         newProduct();
                                 })
-                            
+
                             })
                             // INSERT INTO products (product_name, department_name, price, stock_quantity)
                             // VALUES (varn1, var2, numVar1, numVar2)
                         });
-                            
-                        
+
+
                     }
                     break;
 
-                    }
-                    // if(choice == '{"managerSelection":"option1"}'){
+            }
+            // if(choice == '{"managerSelection":"option1"}'){
 
-                    // }else
-                    // console.log("Dude");
-            })
+            // }else
+            // console.log("Dude");
+        })
     }
 
 });

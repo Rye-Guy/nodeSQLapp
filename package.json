@@ -1,0 +1,23 @@
+{
+  "name": "nodesqlapp",
+  "version": "1.0.0",
+  "description": "node with sql connection CLI app",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rye-Guy/nodeSQLapp.git"
+  },
+  "author": "Rye-Guy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rye-Guy/nodeSQLapp/issues"
+  },
+  "homepage": "https://github.com/Rye-Guy/nodeSQLapp#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0",
+    "mysql": "^2.15.0"
+  }
+}
